@@ -1,0 +1,227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="소스 파일">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="헤더 파일">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="ChatServer">
+      <UniqueIdentifier>{312c7b6b-7567-4de5-903e-5b3822599b61}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LoginThread">
+      <UniqueIdentifier>{bfc6993b-3a34-45a2-b24a-668a02977614}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ChattingThread">
+      <UniqueIdentifier>{86229e6d-abfe-47ba-9676-091e085e6fbf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Other">
+      <UniqueIdentifier>{c7518efe-d350-4c96-af9b-e531bc72a323}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ServerCommon">
+      <UniqueIdentifier>{89731e50-1300-4cf0-b849-324884650986}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="LanClient">
+      <UniqueIdentifier>{55c29ce9-f0c8-48df-9b3a-f5c522704379}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GameServerLib">
+      <UniqueIdentifier>{dba1ad21-1d9b-4283-8808-b7cadcdac8e7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginThread.cpp">
+      <Filter>LoginThread</Filter>
+    </ClCompile>
+    <ClCompile Include="ChattingThread.cpp">
+      <Filter>ChattingThread</Filter>
+    </ClCompile>
+    <ClCompile Include="Sector.cpp">
+      <Filter>Other</Filter>
+    </ClCompile>
+    <ClCompile Include="SCCContents.cpp">
+      <Filter>Other</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ServerCommon\ServerCommon\CMClient.cpp">
+      <Filter>ServerCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ServerCommon\ServerCommon\DataStructure\CLinkedList.cpp">
+      <Filter>ServerCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ServerCommon\ServerCommon\DB\DBWriteThreadBase.cpp">
+      <Filter>ServerCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ServerCommon\ServerCommon\Monitor\HMonitor.cpp">
+      <Filter>ServerCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ServerCommon\ServerCommon\NetWork\RingBuffer.cpp">
+      <Filter>ServerCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\Timer.cpp">
+      <Filter>ServerCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\UpdateBase.cpp">
+      <Filter>ServerCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\LanClient\LanClient\LanClient.cpp">
+      <Filter>LanClient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\LanClient\LanClient\LanClientSession.cpp">
+      <Filter>LanClient</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameServerLib\GameServerLib\ContentsBase.cpp">
+      <Filter>GameServerLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameServerLib\GameServerLib\GameServer.cpp">
+      <Filter>GameServerLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameServerLib\GameServerLib\GameSession.cpp">
+      <Filter>GameServerLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameServerLib\GameServerLib\ParallelContent.cpp">
+      <Filter>GameServerLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameServerLib\GameServerLib\SerialContent.cpp">
+      <Filter>GameServerLib</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginChatServer.cpp">
+      <Filter>ChatServer</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LoginThread.h">
+      <Filter>LoginThread</Filter>
+    </ClInclude>
+    <ClInclude Include="ChattingThread.h">
+      <Filter>ChattingThread</Filter>
+    </ClInclude>
+    <ClInclude Include="SCCContents.h">
+      <Filter>Other</Filter>
+    </ClInclude>
+    <ClInclude Include="Sector.h">
+      <Filter>Other</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Other</Filter>
+    </ClInclude>
+    <ClInclude Include="en_ChatContentsType.h">
+      <Filter>Other</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\Assert.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\CMClient.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\CommonProtocol.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\DataStructure\CAddressTranslator.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\DataStructure\CLinkedList.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\DataStructure\CLockFreeObjectPool.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\DataStructure\CLockFreeQueue.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\DataStructure\CLockFreeStack.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\DataStructure\CTlsObjectPool.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\DB\DBWriteThreadBase.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\Job\MyJob.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\Logger\Logger.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\Monitor\HMonitor.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\Monitor\Monitorable.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\MYOVERLAPPED.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\NetWork\Packet.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\NetWork\RingBuffer.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\Parser\Parser.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\ServerNum.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\Timer.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\UpdateBase.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\LanClient\LanClient\LanClient.h">
+      <Filter>LanClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\LanClient\LanClient\LanClientSession.h">
+      <Filter>LanClient</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameServerLib\GameServerLib\ContentsBase.h">
+      <Filter>GameServerLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameServerLib\GameServerLib\ContentsType.h">
+      <Filter>GameServerLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameServerLib\GameServerLib\ErrType.h">
+      <Filter>GameServerLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameServerLib\GameServerLib\GameServer.h">
+      <Filter>GameServerLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameServerLib\GameServerLib\GameSession.h">
+      <Filter>GameServerLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameServerLib\GameServerLib\IContents.h">
+      <Filter>GameServerLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameServerLib\GameServerLib\IHandler.h">
+      <Filter>GameServerLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameServerLib\GameServerLib\Logger.h">
+      <Filter>GameServerLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameServerLib\GameServerLib\ParallelContent.h">
+      <Filter>GameServerLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameServerLib\GameServerLib\PlayerBase.h">
+      <Filter>GameServerLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameServerLib\GameServerLib\SerialContent.h">
+      <Filter>GameServerLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameServerLib\GameServerLib\ThreadMessage.h">
+      <Filter>GameServerLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameServerLib\GameServerLib\ThreadMsg.h">
+      <Filter>GameServerLib</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginChatServer.h">
+      <Filter>ChatServer</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
