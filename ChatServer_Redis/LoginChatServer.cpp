@@ -23,7 +23,7 @@ __forceinline T& IGNORE_CONST(const T& value)
 }
 
 LoginChatServer::LoginChatServer()
-	:GameServer{ L"LoginChatConfig.txt" },TICK_PER_FRAME_{0},SESSION_TIMEOUT_{0}
+	:GameServer{ L"LoginChatConfig.txt" }, TICK_PER_FRAME_{ 0 }, SESSION_TIMEOUT_{ 0 }, pLanClient_{ nullptr }
 {
 }
 
@@ -190,7 +190,6 @@ void LoginChatServer::OnMonitor()
 	pLanClient_->SendToMonitoringServer(CHAT, dfMONITOR_DATA_TYPE_CHAT_PLAYER, (int)playerNum, curTime);
 	pLanClient_->SendToMonitoringServer(CHAT, dfMONITOR_DATA_TYPE_CHAT_UPDATE_TPS, (int)UpdateTPS, curTime);
 	pLanClient_->SendToMonitoringServer(CHAT, dfMONITOR_DATA_TYPE_CHAT_PACKET_POOL, (int)Packet::packetPool_.AllocSize_, curTime);
-	pLanClient_->SendToMonitoringServer(CHAT, dfMONITOR_DATA_TYPE_CHAT_UPDATEMSG_POOL, (int)(pSessionArr_[0].recvMsgQ_.nodePool_.AllocSize_), curTime);
 
 	pLanClient_->SendToMonitoringServer(CHAT, dfMONITOR_DATA_TYPE_MONITOR_CPU_TOTAL, (int)monitor._fProcessorTotal, curTime);
 	pLanClient_->SendToMonitoringServer(CHAT, dfMONITOR_DATA_TYPE_MONITOR_NONPAGED_MEMORY, (int)nonPagedPoolMByte, curTime);
