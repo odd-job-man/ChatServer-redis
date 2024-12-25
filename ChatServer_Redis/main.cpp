@@ -9,5 +9,5 @@ LoginChatServer g_ChatServer;
 int main()
 {
 	g_ChatServer.Start();
-	Sleep(INFINITE);
+	g_ChatServer.WaitUntilShutDown();
 }

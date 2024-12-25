@@ -2,7 +2,9 @@
 #include "Player.h"
 #include "SCCContents.h"
 #include "en_ChatContentsType.h"
-#include <LoginChatServer.h>
+#include "LoginChatServer.h"
+#include "RedisClientWrapper.h"
+
 using namespace cpp_redis;
 
 #pragma warning(disable : 26495)
@@ -96,14 +98,3 @@ void LoginThread::CS_CHAT_REQ_LOGIN(void* pPlayer, Packet* pPacket)
 	RegisterLeave(pPlayer, (int)en_ChatContentsType::CHAT);
 }
 
-cpp_redis::client* LoginThread::GetRedisClient()
-{
-	client* pClient = (client*)TlsGetValue(redisClientIdx_);
-	if (!pClient)
-	{
-		pClient = new client;
-		pClient->connect();
-		TlsSetValue(redisClientIdx_, pClient);
-	}
-	return pClient;
-}

@@ -23,7 +23,7 @@ __forceinline T& IGNORE_CONST(const T& value)
 }
 
 LoginChatServer::LoginChatServer()
-	:GameServer{ L"LoginChatConfig.txt" }, TICK_PER_FRAME_{ 0 }, SESSION_TIMEOUT_{ 0 }, pLanClient_{ nullptr }
+	:GameServer{ L"LoginChatConfig.txt" }, TICK_PER_FRAME_{ 0 }, SESSION_TIMEOUT_{ 0 }
 {
 }
 
@@ -41,18 +41,18 @@ void LoginChatServer::Start()
 	IGNORE_CONST(SESSION_TIMEOUT_) = (ULONGLONG)_wtoi64((LPCWSTR)pStart);
 	ReleaseParser(psr);
 
-	LoginThread* pLogin = new LoginThread{ this };
-	ContentsBase::RegisterContents((int)en_ChatContentsType::LOGIN,static_cast<ContentsBase*>(pLogin));
+	pLogin_ = new LoginThread{ this };
+	ContentsBase::RegisterContents((int)en_ChatContentsType::LOGIN,static_cast<ContentsBase*>(pLogin_));
 	ContentsBase::SetContentsToFirst((int)en_ChatContentsType::LOGIN);
 
-	ChattingThread* pChatting = new ChattingThread{ 40,hcp_,5,this };
-	ContentsBase::RegisterContents((int)en_ChatContentsType::CHAT, static_cast<ContentsBase*>(pChatting));
+	pChatting_ = new ChattingThread{ 40,hcp_,5,this };
+	ContentsBase::RegisterContents((int)en_ChatContentsType::CHAT, static_cast<ContentsBase*>(pChatting_));
 
-	MonitoringUpdate* pMonitor = new MonitoringUpdate{ hcp_,1000,5 };
-	pMonitor->RegisterMonitor(static_cast<const Monitorable*>(this));
+	pConsoleMonitor_ = new MonitoringUpdate{ hcp_,1000,5 };
+	pConsoleMonitor_->RegisterMonitor(static_cast<const Monitorable*>(this));
 
-	Timer::Reigster_UPDATE(pChatting);
-	Timer::Reigster_UPDATE(pMonitor);
+	Timer::Reigster_UPDATE(pChatting_);
+	Timer::Reigster_UPDATE(pConsoleMonitor_);
 
 	for (DWORD i = 0; i < IOCP_WORKER_THREAD_NUM_; ++i)
 		ResumeThread(hIOCPWorkerThreadArr_[i]);
@@ -61,12 +61,10 @@ void LoginChatServer::Start()
 
 	pLanClient_ = new CMClient{ L"LoginChatLanClientConfig.txt", SERVERNUM::CHAT };
 	pLanClient_->Start();
-
-
 	Timer::Start();
 }
 
-BOOL LoginChatServer::OnConnectionRequest()
+BOOL LoginChatServer::OnConnectionRequest(const SOCKADDR_IN* pSockAddrIn)
 {
 	return TRUE;
 }
@@ -83,6 +81,19 @@ void LoginChatServer::OnError(ULONGLONG id, int errorType, Packet* pRcvdPacket)
 
 void LoginChatServer::OnPost(void* order)
 {
+}
+
+void LoginChatServer::OnLastTaskBeforeAllWorkerThreadEndBeforeShutDown()
+{
+	pLanClient_->ShutDown();
+	delete pLanClient_;
+}
+
+void LoginChatServer::OnResourceCleanAtShutDown()
+{
+	delete pLogin_;
+	delete pChatting_;
+	delete pConsoleMonitor_;
 }
 
 void LoginChatServer::OnMonitor()
@@ -132,8 +143,12 @@ void LoginChatServer::OnMonitor()
 	double networkSentBytes = monitor.GetNetWorkSendBytes();
 	double networkRecvBytes = monitor.GetNetWorkRecvBytes();
 
+	static int shutDownFlag = 10;
+	static int sdfCleanFlag = 0; // 1분넘어가면 초기화
+
 	printf(
 		"Elapsed Time : %02lluD-%02lluH-%02lluMin-%02lluSec\n"
+		"Remaining HOME Key Push To Shut Down : %d\n"
 		"MonitorServerConnected : %s\n"
 		"update Count : %d\n"
 		"Packet Pool Alloc Capacity : %d\n"
@@ -155,6 +170,7 @@ void LoginChatServer::OnMonitor()
 		"Process CPU Time : %.2f\n"
 		"TCP Retransmitted/sec : %.2f\n\n",
 		ullElapsedDay, ullElapsedHour, ullElapsedMin, ullElapsedSecond,
+		shutDownFlag,
 		(pLanClient_->bLogin_ == TRUE) ? "True" : "False",
 		UpdateTPS,
 		Packet::packetPool_.capacity_ * Bucket<Packet, false>::size,
@@ -175,6 +191,24 @@ void LoginChatServer::OnMonitor()
 		monitor._fProcessTotal,
 		monitor.GetRetranse()
 	);
+
+	++sdfCleanFlag;
+	if (sdfCleanFlag == 60)
+	{
+		shutDownFlag = 10;
+		sdfCleanFlag = 0;
+	}
+
+	if (GetAsyncKeyState(VK_HOME) & 0x0001)
+	{
+		--shutDownFlag;
+		if (shutDownFlag == 0)
+		{
+			printf("Start ShutDown !\n");
+			RequestShutDown();
+			return;
+		}
+	}
 
 	if (pLanClient_->bLogin_ == FALSE)
 		return;

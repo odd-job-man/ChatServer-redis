@@ -13,6 +13,4 @@ public:
 	virtual void OnLeave(void* pPlayer) override;
 	virtual void OnRecv(Packet* pPacket, void* pPlayer) override;
 	void CS_CHAT_REQ_LOGIN(void* pPlayer, Packet* pPacket);
-	cpp_redis::client* GetRedisClient();
-	DWORD redisClientIdx_;
 };

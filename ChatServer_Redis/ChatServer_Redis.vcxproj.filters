@@ -223,5 +223,8 @@
     <ClInclude Include="LoginChatServer.h">
       <Filter>ChatServer</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\RedisClientWrapper.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
