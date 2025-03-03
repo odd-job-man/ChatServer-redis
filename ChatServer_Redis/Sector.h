@@ -15,6 +15,22 @@ struct SECTOR_AROUND
 	BYTE sectorCount;
 };
 
+struct SectorArray
+{
+	CLinkedList(*listArr)[NUM_OF_SECTOR_VERTICAL];
+	SectorArray()
+	{
+		listArr = (CLinkedList(*)[NUM_OF_SECTOR_VERTICAL])malloc(sizeof(CLinkedList) * NUM_OF_SECTOR_HORIZONTAL * NUM_OF_SECTOR_VERTICAL);
+		for (int y = 0; y < NUM_OF_SECTOR_VERTICAL; ++y)
+		{
+			for (int x = 0; x < NUM_OF_SECTOR_HORIZONTAL; ++x)
+			{
+				new(&listArr[y][x])CLinkedList{ offsetof(Player,sectorLink) };
+			}
+		}
+	}
+};
+
 void GetSectorAround(SHORT sectorX, SHORT sectorY, SECTOR_AROUND* pOutSectorAround);
 void SendPacket_AROUND(SECTOR_AROUND* pSectorAround, SmartPacket& sp);
 void RegisterClientAtSector(WORD sectorX, WORD sectorY, Player* pPlayer);

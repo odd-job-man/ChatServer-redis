@@ -53,19 +53,10 @@
     <ClCompile Include="..\..\ServerCommon\ServerCommon\DataStructure\CLinkedList.cpp">
       <Filter>ServerCommon</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\ServerCommon\ServerCommon\DB\DBWriteThreadBase.cpp">
-      <Filter>ServerCommon</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\ServerCommon\ServerCommon\Monitor\HMonitor.cpp">
       <Filter>ServerCommon</Filter>
     </ClCompile>
     <ClCompile Include="..\..\ServerCommon\ServerCommon\NetWork\RingBuffer.cpp">
-      <Filter>ServerCommon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\Timer.cpp">
-      <Filter>ServerCommon</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\UpdateBase.cpp">
       <Filter>ServerCommon</Filter>
     </ClCompile>
     <ClCompile Include="..\..\LanClient\LanClient\LanClient.cpp">
@@ -91,6 +82,18 @@
     </ClCompile>
     <ClCompile Include="LoginChatServer.cpp">
       <Filter>ChatServer</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameServerLib\GameServerLib\SendThread.cpp">
+      <Filter>GameServerLib</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\UpdateBase.cpp">
+      <Filter>ServerCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\Scheduler.cpp">
+      <Filter>ServerCommon</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\GameServerLib\GameServerLib\GameServerTimeOut.cpp">
+      <Filter>GameServerLib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -139,9 +142,6 @@
     <ClInclude Include="..\..\ServerCommon\ServerCommon\DataStructure\CTlsObjectPool.h">
       <Filter>ServerCommon</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\ServerCommon\ServerCommon\DB\DBWriteThreadBase.h">
-      <Filter>ServerCommon</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\ServerCommon\ServerCommon\Job\MyJob.h">
       <Filter>ServerCommon</Filter>
     </ClInclude>
@@ -167,12 +167,6 @@
       <Filter>ServerCommon</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ServerCommon\ServerCommon\ServerNum.h">
-      <Filter>ServerCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\Timer.h">
-      <Filter>ServerCommon</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\UpdateBase.h">
       <Filter>ServerCommon</Filter>
     </ClInclude>
     <ClInclude Include="..\..\LanClient\LanClient\LanClient.h">
@@ -208,9 +202,6 @@
     <ClInclude Include="..\..\GameServerLib\GameServerLib\ParallelContent.h">
       <Filter>GameServerLib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\GameServerLib\GameServerLib\PlayerBase.h">
-      <Filter>GameServerLib</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\GameServerLib\GameServerLib\SerialContent.h">
       <Filter>GameServerLib</Filter>
     </ClInclude>
@@ -225,6 +216,18 @@
     </ClInclude>
     <ClInclude Include="..\..\ServerCommon\ServerCommon\RedisClientWrapper.h">
       <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="SendThread.h">
+      <Filter>GameServerLib</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\UpdateBase.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\Scheduler.h">
+      <Filter>ServerCommon</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\GameServerLib\GameServerLib\GameServerTimeOut.h">
+      <Filter>GameServerLib</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -9,27 +9,10 @@
 #include "Logger.h"
 #include <list>
 
-extern LoginChatServer g_ChatServer;
+extern LoginChatServer* g_pChatServer;
 
-struct SectorArray
-{
-#ifdef MYLIST_SECTOR
-	CLinkedList(*listArr)[NUM_OF_SECTOR_VERTICAL];
-	SectorArray()
-	{
-		listArr = (CLinkedList(*)[NUM_OF_SECTOR_VERTICAL])malloc(sizeof(CLinkedList) * NUM_OF_SECTOR_HORIZONTAL * NUM_OF_SECTOR_VERTICAL);
-		for (int y = 0; y < NUM_OF_SECTOR_VERTICAL; ++y)
-		{
-			for (int x = 0; x < NUM_OF_SECTOR_HORIZONTAL; ++x)
-			{
-				new(&listArr[y][x])CLinkedList{offsetof(Player,sectorLink)};
-			}
-		}
-	}
-#else
-	std::list<Player*> listArr[NUM_OF_SECTOR_VERTICAL][NUM_OF_SECTOR_HORIZONTAL];
-#endif
-}sectors;
+
+SectorArray sectors;
 
 
 
@@ -111,28 +94,17 @@ void RemoveClientAtSector(WORD sectorX, WORD sectorY, Player* pPlayer)
 
 void SendPacket_AROUND(SECTOR_AROUND* pSectorAround, SmartPacket& sp)
 {
-#ifdef MYLIST_SECTOR
 	for (int i = 0; i < pSectorAround->sectorCount; ++i)
 	{
 		CLinkedList* pList = &sectors.listArr[pSectorAround->Around[i].sectorY][pSectorAround->Around[i].sectorX];
 		void* pPlayer = pList->GetFirst();
 		while (pPlayer != nullptr)
 		{
-			//g_ChatServer.SENDPACKET(((Player*)pPlayer)->sessionId_, sp);
-			g_ChatServer.SendPacket(((Player*)pPlayer)->sessionId_, sp.GetPacket());
-			//g_ChatServer.SendPacket_ENQUEUE_ONLY(((Player*)pPlayer)->sessionId_, sp.GetPacket());
+			g_pChatServer->EnqPacket(((Player*)pPlayer)->sessionId_, sp.GetPacket());
+			//g_ChatServer->SendPacket(((Player*)pPlayer)->sessionId_, sp);
 			pPlayer = pList->GetNext(pPlayer);
 		}
 	}
-#else
-	for (int i = 0; i < pSectorAround->sectorCount; ++i)
-	{
-		for (void* player : sectors.listArr[pSectorAround->Around[i].sectorY][pSectorAround->Around[i].sectorX])
-		{
-			g_ChatServer.SendPacket_ENQUEUE_ONLY(((Player*)player)->sessionId_, sp.GetPacket());
-		}
-	}
-#endif
 }
 
 void GetSectorMonitoringInfo(Packet* pOutPacket)

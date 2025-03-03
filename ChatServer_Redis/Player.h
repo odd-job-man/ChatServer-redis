@@ -1,7 +1,6 @@
 #pragma once
 #include<windows.h>
 #include "CLinkedList.h"
-#define MYLIST_SECTOR
 
 struct Player
 {
@@ -12,24 +11,24 @@ struct Player
 	static inline Player* pPlayerArr;
 	static constexpr int INITIAL_SECTOR_VALUE = 51;
 
+	static inline CRITICAL_SECTION MonitorSectorInfoCs;
+	static inline ULONGLONG MonitoringClientSessionID = MAXULONGLONG;
+
 	bool bLogin_;
 	bool bRegisterAtSector_;
+	bool bMonitoringLogin_;
 	WORD sectorX_;
 	WORD sectorY_;
 	LINKED_NODE contentLink;
-#ifdef MYLIST_SECTOR
 	LINKED_NODE sectorLink;
-#endif
 	ULONGLONG sessionId_;
 	INT64 accountNo_;
 	WCHAR ID_[ID_LEN];
 	WCHAR nickName_[NICK_NAME_LEN];
-	// 좀 애매함
+
 	Player()
 		:
-#ifdef MYLIST_SECTOR
 		sectorLink{ offsetof(Player,sectorLink) },
-#endif
 		contentLink{ offsetof(Player,contentLink) }, bLogin_{ false }, bRegisterAtSector_{ false }
 	{}
 

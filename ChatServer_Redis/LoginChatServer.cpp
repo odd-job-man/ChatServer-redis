@@ -3,12 +3,12 @@
 #include "Parser.h"
 #include "Player.h"
 #include "en_ChatContentsType.h"
-#include "Parser.h"
+//#include "Parser.h"
 #include "LoginThread.h"
 #include "ChattingThread.h"
 #include "ServerNum.h"
-#include "Timer.h"
 #include "Monitorable.h"
+#include "Scheduler.h"
 #include "UpdateBase.h"
 #include "CommonProtocol.h"
 #include "Packet.h"
@@ -22,55 +22,67 @@ __forceinline T& IGNORE_CONST(const T& value)
 	return const_cast<T&>(value);
 }
 
-LoginChatServer::LoginChatServer()
-	:GameServer{ L"LoginChatConfig.txt" }, TICK_PER_FRAME_{ 0 }, SESSION_TIMEOUT_{ 0 }
+LoginChatServer::LoginChatServer(WCHAR* pIP, USHORT port, DWORD iocpWorkerNum, DWORD cunCurrentThreadNum, BOOL bZeroCopy, LONG maxSession, LONG maxUser, BYTE packetCode, BYTE packetfixedKey)
+	:GameServer{ pIP,port,iocpWorkerNum,cunCurrentThreadNum,bZeroCopy,maxSession,maxUser,sizeof(Player),packetCode,packetfixedKey }
 {
 }
 
-void LoginChatServer::Start()
+
+LoginChatServer::~LoginChatServer()
 {
-	SetEntirePlayerMemory(sizeof(Player));
+	delete pLogin_;
+	delete pChatting_;
+	delete pConsoleMonitor_;
+	delete pLanClient_;
+}
+
+void LoginChatServer::Start(DWORD tickPerFrame, DWORD timeOutCheckInterval, LONG sessionTimeOut, LONG authUserTimeOut)
+{
 	Player::MAX_PLAYER_NUM = maxPlayer_;
-	char* pStart;
+	SetEntirePlayerMemory(sizeof(Player));
+	InitializeCriticalSection(&Player::MonitorSectorInfoCs);
 
-	PARSER psr = CreateParser(L"LoginChatConfig.txt");
-	GetValue(psr, L"TICK_PER_FRAME", (PVOID*)&pStart, nullptr);
-	IGNORE_CONST(TICK_PER_FRAME_) = _wtoi((LPCWSTR)pStart);
-
-	GetValue(psr, L"SESSION_TIMEOUT", (PVOID*)&pStart, nullptr);
-	IGNORE_CONST(SESSION_TIMEOUT_) = (ULONGLONG)_wtoi64((LPCWSTR)pStart);
-	ReleaseParser(psr);
-
-	pLogin_ = new LoginThread{ this };
-	ContentsBase::RegisterContents((int)en_ChatContentsType::LOGIN,static_cast<ContentsBase*>(pLogin_));
+	pLogin_ = new LoginContents{ this };
+	ContentsBase::RegisterContents((int)en_ChatContentsType::LOGIN, static_cast<ContentsBase*>(pLogin_));
 	ContentsBase::SetContentsToFirst((int)en_ChatContentsType::LOGIN);
 
-	pChatting_ = new ChattingThread{ 40,hcp_,5,this };
+	pChatting_ = new ChatContents{ tickPerFrame,hcp_,5,this };
 	ContentsBase::RegisterContents((int)en_ChatContentsType::CHAT, static_cast<ContentsBase*>(pChatting_));
+	Scheduler::Register_UPDATE(pChatting_);
 
 	pConsoleMonitor_ = new MonitoringUpdate{ hcp_,1000,5 };
 	pConsoleMonitor_->RegisterMonitor(static_cast<const Monitorable*>(this));
-
-	Timer::Reigster_UPDATE(pChatting_);
-	Timer::Reigster_UPDATE(pConsoleMonitor_);
+	Scheduler::Register_UPDATE(pConsoleMonitor_);
 
 	for (DWORD i = 0; i < IOCP_WORKER_THREAD_NUM_; ++i)
 		ResumeThread(hIOCPWorkerThreadArr_[i]);
 
-	ResumeThread(hAcceptThread_);
+	if (pLanClient_)
+	{
+		pLanClient_->Start();
+	}
 
-	pLanClient_ = new CMClient{ L"LoginChatLanClientConfig.txt", SERVERNUM::CHAT };
-	pLanClient_->Start();
-	Timer::Start();
+	pTimeOut_ = new GameServerTimeOut{ timeOutCheckInterval,hcp_,3,sessionTimeOut,authUserTimeOut,this };
+	Scheduler::Register_UPDATE(pTimeOut_);
+
+	Scheduler::Start();
 }
 
-BOOL LoginChatServer::OnConnectionRequest(const SOCKADDR_IN* pSockAddrIn)
+void LoginChatServer::RegisterMonitorLanClient(CMClient* pClient)
+{
+	pLanClient_ = pClient;
+}
+
+BOOL LoginChatServer::OnConnectionRequest(const WCHAR* pIP, const USHORT port)
 {
 	return TRUE;
 }
 
 void* LoginChatServer::OnAccept(void* pPlayer)
 {
+	Player* pOnAcceptPlayer = (Player*)pPlayer;
+	new(pOnAcceptPlayer)Player{};
+	pOnAcceptPlayer->sessionId_ = GetSessionID(pPlayer);
 	ContentsBase::FirstEnter(pPlayer);
 	return nullptr;
 }
@@ -86,14 +98,6 @@ void LoginChatServer::OnPost(void* order)
 void LoginChatServer::OnLastTaskBeforeAllWorkerThreadEndBeforeShutDown()
 {
 	pLanClient_->ShutDown();
-	delete pLanClient_;
-}
-
-void LoginChatServer::OnResourceCleanAtShutDown()
-{
-	delete pLogin_;
-	delete pChatting_;
-	delete pConsoleMonitor_;
 }
 
 void LoginChatServer::OnMonitor()
@@ -130,8 +134,8 @@ void LoginChatServer::OnMonitor()
 	ULONGLONG disconnectTPS = InterlockedExchange(&disconnectTPS_, 0);
 	ULONGLONG recvTPS = InterlockedExchange(&recvTPS_, 0);
 	LONG sendTPS = InterlockedExchange(&sendTPS_, 0);
-	LONG sessionNum = InterlockedXor(&lSessionNum_, 0);
-	LONG playerNum = InterlockedXor(&lPlayerNum_, 0);
+	LONG sessionNum = lSessionNum_;
+	LONG playerNum = lPlayerNum_;
 	LONG UpdateTPS = InterlockedExchange(&UPDATE_CNT_TPS, 0);
 
 	acceptTotal_ += acceptTPS;

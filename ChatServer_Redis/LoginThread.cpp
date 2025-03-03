@@ -8,22 +8,22 @@
 using namespace cpp_redis;
 
 #pragma warning(disable : 26495)
-LoginThread::LoginThread(GameServer* pGameServer)
+LoginContents::LoginContents(GameServer* pGameServer)
 	:ParallelContent{pGameServer}
 {
 }
 #pragma warning(default : 26495)
 
-void LoginThread::OnEnter(void* pPlayer)
+void LoginContents::OnEnter(void* pPlayer)
 {
 }
 
-void LoginThread::OnLeave(void* pPlayer)
+void LoginContents::OnLeave(void* pPlayer)
 {
 }
 
 
-void LoginThread::OnRecv(Packet* pPacket, void* pPlayer)
+void LoginContents::OnRecv(Packet* pPacket, void* pPlayer)
 {
 	Player* pAuthPlayer = (Player*)pPlayer;
 	WORD Type;
@@ -35,8 +35,23 @@ void LoginThread::OnRecv(Packet* pPacket, void* pPlayer)
 		case en_PACKET_CS_CHAT_REQ_LOGIN:
 			CS_CHAT_REQ_LOGIN(pPlayer, pPacket);
 			break;
+
 		case en_PACKET_CS_CHAT_REQ_HEARTBEAT:
 			break;
+
+		case en_PACKET_CS_CHAT_MONITOR_CLIENT_LOGIN:
+			EnterCriticalSection(&Player::MonitorSectorInfoCs);
+			pAuthPlayer->bLogin_ = true;
+			pAuthPlayer->bMonitoringLogin_ = true;
+			if (Player::MonitoringClientSessionID != MAXULONGLONG)
+			{
+				pGameServer_->Disconnect(Player::MonitoringClientSessionID);
+			}
+			Player::MonitoringClientSessionID = pAuthPlayer->sessionId_;
+			LeaveCriticalSection(&Player::MonitorSectorInfoCs);
+			RegisterLeave(pPlayer, (int)en_ChatContentsType::CHAT);
+			break;
+
 		default:
 			__debugbreak();
 			break;
@@ -54,11 +69,18 @@ void LoginThread::OnRecv(Packet* pPacket, void* pPlayer)
 			LOG(L"RESIZE", ERR, TEXTFILE, L"Resize Fail ShutDown Server");
 			__debugbreak();
 		}
+
+		if (Type == en_PACKET_CS_CHAT_MONITOR_CLIENT_LOGIN)
+		{
+			LeaveCriticalSection(&Player::MonitorSectorInfoCs);
+		}
 	}
 	InterlockedIncrement(&static_cast<LoginChatServer*>(pGameServer_)->UPDATE_CNT_TPS);
 }
 
-void LoginThread::CS_CHAT_REQ_LOGIN(void* pPlayer, Packet* pPacket)
+constexpr int SESSION_KEY_LEN = 64;
+
+void LoginContents::CS_CHAT_REQ_LOGIN(void* pPlayer, Packet* pPacket)
 {
 	Player* pLoginPlayer = (Player*)pPlayer;
 
@@ -69,6 +91,7 @@ void LoginThread::CS_CHAT_REQ_LOGIN(void* pPlayer, Packet* pPacket)
 		return;
 	}
 
+	// 패킷 언마샬링
 	INT64 accountNo;
 	(*pPacket) >> accountNo;
 	WCHAR* pID = (WCHAR*)pPacket->GetPointer(sizeof(WCHAR) * 20);
@@ -76,25 +99,27 @@ void LoginThread::CS_CHAT_REQ_LOGIN(void* pPlayer, Packet* pPacket)
 	char* pSessionKey = pPacket->GetPointer(64);
 
 
+	// 인증 토큰 레디스에서 동기로 읽어오기
 	client* pClient = GetRedisClient();
 	auto&& temp = pClient->get(std::to_string(accountNo));
 	pClient->sync_commit();
 	auto&& ret = temp._Get_value();
 
 	// 레디스에 세션키가 없거나, 레디스에 저장된 세션키와 다르다면 로그인 실패
-	if (ret.is_null() || memcmp(pSessionKey, ret.as_string().c_str(), 64) != 0)
+	if (ret.is_null() || memcmp(pSessionKey, ret.as_string().c_str(), SESSION_KEY_LEN) != 0)
 	{
 		pGameServer_->Disconnect(sessionID);
 		return;
 	}
 
 	// 플레이어 초기화 및 로그인 처리
-	pLoginPlayer->bLogin_ = true;
-	pLoginPlayer->bRegisterAtSector_ = false;
-	pLoginPlayer->accountNo_ = accountNo;
-	pLoginPlayer->sessionId_ = sessionID;
-	wcscpy_s(pLoginPlayer->ID_, Player::ID_LEN, pID);
-	wcscpy_s(pLoginPlayer->nickName_, Player::NICK_NAME_LEN, pNickName);
+	{
+		pLoginPlayer->bLogin_ = true;
+		pLoginPlayer->bRegisterAtSector_ = false;
+		pLoginPlayer->accountNo_ = accountNo;
+		wcscpy_s(pLoginPlayer->ID_, Player::ID_LEN, pID);
+		wcscpy_s(pLoginPlayer->nickName_, Player::NICK_NAME_LEN, pNickName);
+	}
 	RegisterLeave(pPlayer, (int)en_ChatContentsType::CHAT);
 }
 

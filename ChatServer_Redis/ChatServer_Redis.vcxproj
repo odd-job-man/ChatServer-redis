@@ -135,17 +135,18 @@
   <ItemGroup>
     <ClCompile Include="..\..\GameServerLib\GameServerLib\ContentsBase.cpp" />
     <ClCompile Include="..\..\GameServerLib\GameServerLib\GameServer.cpp" />
+    <ClCompile Include="..\..\GameServerLib\GameServerLib\GameServerTimeOut.cpp" />
     <ClCompile Include="..\..\GameServerLib\GameServerLib\GameSession.cpp" />
     <ClCompile Include="..\..\GameServerLib\GameServerLib\ParallelContent.cpp" />
+    <ClCompile Include="..\..\GameServerLib\GameServerLib\SendThread.cpp" />
     <ClCompile Include="..\..\GameServerLib\GameServerLib\SerialContent.cpp" />
     <ClCompile Include="..\..\LanClient\LanClient\LanClient.cpp" />
     <ClCompile Include="..\..\LanClient\LanClient\LanClientSession.cpp" />
     <ClCompile Include="..\..\ServerCommon\ServerCommon\CMClient.cpp" />
     <ClCompile Include="..\..\ServerCommon\ServerCommon\DataStructure\CLinkedList.cpp" />
-    <ClCompile Include="..\..\ServerCommon\ServerCommon\DB\DBWriteThreadBase.cpp" />
     <ClCompile Include="..\..\ServerCommon\ServerCommon\Monitor\HMonitor.cpp" />
     <ClCompile Include="..\..\ServerCommon\ServerCommon\NetWork\RingBuffer.cpp" />
-    <ClCompile Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\Timer.cpp" />
+    <ClCompile Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\Scheduler.cpp" />
     <ClCompile Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\UpdateBase.cpp" />
     <ClCompile Include="ChattingThread.cpp" />
     <ClCompile Include="LoginChatServer.cpp" />
@@ -159,12 +160,12 @@
     <ClInclude Include="..\..\GameServerLib\GameServerLib\ContentsType.h" />
     <ClInclude Include="..\..\GameServerLib\GameServerLib\ErrType.h" />
     <ClInclude Include="..\..\GameServerLib\GameServerLib\GameServer.h" />
+    <ClInclude Include="..\..\GameServerLib\GameServerLib\GameServerTimeOut.h" />
     <ClInclude Include="..\..\GameServerLib\GameServerLib\GameSession.h" />
     <ClInclude Include="..\..\GameServerLib\GameServerLib\IContents.h" />
     <ClInclude Include="..\..\GameServerLib\GameServerLib\IHandler.h" />
     <ClInclude Include="..\..\GameServerLib\GameServerLib\Logger.h" />
     <ClInclude Include="..\..\GameServerLib\GameServerLib\ParallelContent.h" />
-    <ClInclude Include="..\..\GameServerLib\GameServerLib\PlayerBase.h" />
     <ClInclude Include="..\..\GameServerLib\GameServerLib\SerialContent.h" />
     <ClInclude Include="..\..\GameServerLib\GameServerLib\ThreadMessage.h" />
     <ClInclude Include="..\..\GameServerLib\GameServerLib\ThreadMsg.h" />
@@ -179,7 +180,6 @@
     <ClInclude Include="..\..\ServerCommon\ServerCommon\DataStructure\CLockFreeQueue.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\DataStructure\CLockFreeStack.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\DataStructure\CTlsObjectPool.h" />
-    <ClInclude Include="..\..\ServerCommon\ServerCommon\DB\DBWriteThreadBase.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\Job\MyJob.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\Logger\Logger.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\Monitor\HMonitor.h" />
@@ -190,7 +190,7 @@
     <ClInclude Include="..\..\ServerCommon\ServerCommon\Parser\Parser.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\RedisClientWrapper.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\ServerNum.h" />
-    <ClInclude Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\Timer.h" />
+    <ClInclude Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\Scheduler.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\UpdateBase.h" />
     <ClInclude Include="ChattingThread.h" />
     <ClInclude Include="en_ChatContentsType.h" />
@@ -199,6 +199,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="SCCContents.h" />
     <ClInclude Include="Sector.h" />
+    <ClInclude Include="SendThread.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
