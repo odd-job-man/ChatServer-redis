@@ -101,7 +101,6 @@ void SendPacket_AROUND(SECTOR_AROUND* pSectorAround, SmartPacket& sp)
 		while (pPlayer != nullptr)
 		{
 			g_pChatServer->EnqPacket(((Player*)pPlayer)->sessionId_, sp.GetPacket());
-			//g_ChatServer->SendPacket(((Player*)pPlayer)->sessionId_, sp);
 			pPlayer = pList->GetNext(pPlayer);
 		}
 	}

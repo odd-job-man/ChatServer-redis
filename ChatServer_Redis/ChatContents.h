@@ -15,7 +15,6 @@ public:
 	void CS_CHAT_REQ_SECTOR_MOVE(INT64 accountNo, WORD sectorX, WORD sectorY, Player* pPlayer);
 	void CS_CHAT_REQ_MESSAGE(INT64 accountNo, WORD messageLen, WCHAR* pMessage, Player* pPlayer);
 	void CS_CHAT_REQ_SECTORINFO(ULONGLONG sessionID);
-
 private:
 	std::unordered_map<INT64, Player*> loginPlayerMap;
 	CLinkedList playerList;

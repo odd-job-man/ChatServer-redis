@@ -1,4 +1,4 @@
-#include "LoginThread.h"
+#include "LoginContents.h"
 #include "Player.h"
 #include "SCCContents.h"
 #include "en_ChatContentsType.h"
@@ -16,6 +16,9 @@ LoginContents::LoginContents(GameServer* pGameServer)
 
 void LoginContents::OnEnter(void* pPlayer)
 {
+	((Player*)(pPlayer))->bLogin_ = false;
+	((Player*)(pPlayer))->bRegisterAtSector_ = false;
+	((Player*)(pPlayer))->bMonitoringLogin_ = false;
 }
 
 void LoginContents::OnLeave(void* pPlayer)
@@ -78,7 +81,6 @@ void LoginContents::OnRecv(Packet* pPacket, void* pPlayer)
 	InterlockedIncrement(&static_cast<LoginChatServer*>(pGameServer_)->UPDATE_CNT_TPS);
 }
 
-constexpr int SESSION_KEY_LEN = 64;
 
 void LoginContents::CS_CHAT_REQ_LOGIN(void* pPlayer, Packet* pPacket)
 {
@@ -94,9 +96,9 @@ void LoginContents::CS_CHAT_REQ_LOGIN(void* pPlayer, Packet* pPacket)
 	// 패킷 언마샬링
 	INT64 accountNo;
 	(*pPacket) >> accountNo;
-	WCHAR* pID = (WCHAR*)pPacket->GetPointer(sizeof(WCHAR) * 20);
-	WCHAR* pNickName = (WCHAR*)pPacket->GetPointer(sizeof(WCHAR) * 20);
-	char* pSessionKey = pPacket->GetPointer(64);
+	WCHAR* pID = (WCHAR*)pPacket->GetPointer(sizeof(WCHAR) * Player::ID_LEN);
+	WCHAR* pNickName = (WCHAR*)pPacket->GetPointer(sizeof(WCHAR) * Player::NICK_NAME_LEN);
+	char* pSessionKey = pPacket->GetPointer(Player::SESSION_KEY_LEN);
 
 
 	// 인증 토큰 레디스에서 동기로 읽어오기
@@ -106,20 +108,17 @@ void LoginContents::CS_CHAT_REQ_LOGIN(void* pPlayer, Packet* pPacket)
 	auto&& ret = temp._Get_value();
 
 	// 레디스에 세션키가 없거나, 레디스에 저장된 세션키와 다르다면 로그인 실패
-	if (ret.is_null() || memcmp(pSessionKey, ret.as_string().c_str(), SESSION_KEY_LEN) != 0)
+	if (ret.is_null() || memcmp(pSessionKey, ret.as_string().c_str(), Player::SESSION_KEY_LEN) != 0)
 	{
 		pGameServer_->Disconnect(sessionID);
 		return;
 	}
 
 	// 플레이어 초기화 및 로그인 처리
-	{
-		pLoginPlayer->bLogin_ = true;
-		pLoginPlayer->bRegisterAtSector_ = false;
-		pLoginPlayer->accountNo_ = accountNo;
-		wcscpy_s(pLoginPlayer->ID_, Player::ID_LEN, pID);
-		wcscpy_s(pLoginPlayer->nickName_, Player::NICK_NAME_LEN, pNickName);
-	}
+	pLoginPlayer->bLogin_ = true;
+	pLoginPlayer->accountNo_ = accountNo;
+	wcscpy_s(pLoginPlayer->ID_, Player::ID_LEN, pID);
+	wcscpy_s(pLoginPlayer->nickName_, Player::NICK_NAME_LEN, pNickName);
 	RegisterLeave(pPlayer, (int)en_ChatContentsType::CHAT);
 }
 

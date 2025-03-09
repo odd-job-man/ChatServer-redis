@@ -138,7 +138,6 @@
     <ClCompile Include="..\..\GameServerLib\GameServerLib\GameServerTimeOut.cpp" />
     <ClCompile Include="..\..\GameServerLib\GameServerLib\GameSession.cpp" />
     <ClCompile Include="..\..\GameServerLib\GameServerLib\ParallelContent.cpp" />
-    <ClCompile Include="..\..\GameServerLib\GameServerLib\SendThread.cpp" />
     <ClCompile Include="..\..\GameServerLib\GameServerLib\SerialContent.cpp" />
     <ClCompile Include="..\..\LanClient\LanClient\LanClient.cpp" />
     <ClCompile Include="..\..\LanClient\LanClient\LanClientSession.cpp" />
@@ -148,9 +147,9 @@
     <ClCompile Include="..\..\ServerCommon\ServerCommon\NetWork\RingBuffer.cpp" />
     <ClCompile Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\Scheduler.cpp" />
     <ClCompile Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\UpdateBase.cpp" />
-    <ClCompile Include="ChattingThread.cpp" />
+    <ClCompile Include="ChatContents.cpp" />
     <ClCompile Include="LoginChatServer.cpp" />
-    <ClCompile Include="LoginThread.cpp" />
+    <ClCompile Include="LoginContents.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SCCContents.cpp" />
     <ClCompile Include="Sector.cpp" />
@@ -176,11 +175,9 @@
     <ClInclude Include="..\..\ServerCommon\ServerCommon\CommonProtocol.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\DataStructure\CAddressTranslator.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\DataStructure\CLinkedList.h" />
-    <ClInclude Include="..\..\ServerCommon\ServerCommon\DataStructure\CLockFreeObjectPool.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\DataStructure\CLockFreeQueue.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\DataStructure\CLockFreeStack.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\DataStructure\CTlsObjectPool.h" />
-    <ClInclude Include="..\..\ServerCommon\ServerCommon\Job\MyJob.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\Logger\Logger.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\Monitor\HMonitor.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\Monitor\Monitorable.h" />
@@ -192,14 +189,13 @@
     <ClInclude Include="..\..\ServerCommon\ServerCommon\ServerNum.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\Scheduler.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\UpdateAndTimer\UpdateBase.h" />
-    <ClInclude Include="ChattingThread.h" />
+    <ClInclude Include="ChatContents.h" />
     <ClInclude Include="en_ChatContentsType.h" />
     <ClInclude Include="LoginChatServer.h" />
-    <ClInclude Include="LoginThread.h" />
+    <ClInclude Include="LoginContents.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="SCCContents.h" />
     <ClInclude Include="Sector.h" />
-    <ClInclude Include="SendThread.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

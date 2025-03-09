@@ -3,9 +3,8 @@
 #include "Parser.h"
 #include "Player.h"
 #include "en_ChatContentsType.h"
-//#include "Parser.h"
-#include "LoginThread.h"
-#include "ChattingThread.h"
+#include "LoginContents.h"
+#include "ChatContents.h"
 #include "ServerNum.h"
 #include "Monitorable.h"
 #include "Scheduler.h"
@@ -14,7 +13,6 @@
 #include "Packet.h"
 #include "CMClient.h"
 #include "CTlsObjectPool.h"
-#include <time.h>
 
 template<typename T>
 __forceinline T& IGNORE_CONST(const T& value)
@@ -39,7 +37,6 @@ LoginChatServer::~LoginChatServer()
 void LoginChatServer::Start(DWORD tickPerFrame, DWORD timeOutCheckInterval, LONG sessionTimeOut, LONG authUserTimeOut)
 {
 	Player::MAX_PLAYER_NUM = maxPlayer_;
-	SetEntirePlayerMemory(sizeof(Player));
 	InitializeCriticalSection(&Player::MonitorSectorInfoCs);
 
 	pLogin_ = new LoginContents{ this };

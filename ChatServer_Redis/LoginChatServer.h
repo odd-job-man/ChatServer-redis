@@ -2,17 +2,15 @@
 #include "GameServer.h"
 #include "CMClient.h"
 #include "HMonitor.h"
-#include "ChattingThread.h"
-#include "LoginThread.h"
+#include "ChatContents.h"
+#include "LoginContents.h"
 #include "GameServerTimeOut.h"
 
 class LoginChatServer : public GameServer
 {
 public:
 	LoginChatServer(WCHAR* pIP, USHORT port, DWORD iocpWorkerNum, DWORD cunCurrentThreadNum, BOOL bZeroCopy, LONG maxSession, LONG maxUser, BYTE packetCode, BYTE packetfixedKey);
-	//LoginChatServer(const WCHAR* pConfigFile, const WCHAR* pLanClientConfigFile);
 	~LoginChatServer();
-	//void Start();
 	void Start(DWORD tickPerFrame, DWORD timeOutCheckInterval, LONG sessionTimeOut, LONG authUserTimeOut);
 	void RegisterMonitorLanClient(CMClient* pClient);
 	virtual BOOL OnConnectionRequest(const WCHAR* pIP, const USHORT port) override;
@@ -33,6 +31,4 @@ private:
 	LoginContents* pLogin_ = nullptr;
 	ChatContents* pChatting_ = nullptr;
 	GameServerTimeOut* pTimeOut_ = nullptr;
-	const WCHAR* pConfigFile_;
-	const WCHAR* pLanClientConfigFile_;
 };

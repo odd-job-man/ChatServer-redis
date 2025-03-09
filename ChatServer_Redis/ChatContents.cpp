@@ -1,7 +1,7 @@
 #include "Winsock2.h"
 #include "SCCContents.h"
 #include "GameServer.h"
-#include "ChattingThread.h"
+#include "ChatContents.h"
 #include "en_ChatContentsType.h"
 #include "Sector.h"
 #include "LoginChatServer.h"
@@ -22,14 +22,13 @@ void ChatContents::OnEnter(void* pPlayer)
 
 	// 로그인 알림으로서 세션 타임아웃을 벗어남
 	pGameServer_->SetLogin(pAuthPlayer->sessionId_);
-
-	if (pAuthPlayer->bMonitoringLogin_ == true)
+	if (pAuthPlayer->bMonitoringLogin_)
 	{
 		InterlockedIncrement(&pGameServer_->lPlayerNum_);
 		return;
 	}
 
-	auto iter = loginPlayerMap.find(pAuthPlayer->accountNo_);
+	const auto& iter = loginPlayerMap.find(pAuthPlayer->accountNo_);
 	if (iter != loginPlayerMap.end())
 	{
 		pGameServer_->Disconnect(iter->second->sessionId_);
@@ -47,13 +46,11 @@ void ChatContents::OnEnter(void* pPlayer)
 
 void ChatContents::OnLeave(void* pPlayer)
 {
-	// 이미 RELEASE 된 플레이어에 대해서 다시한번 RELEASE JOB이 도착한것임
 	Player* pLeavePlayer = (Player*)pPlayer;
 	playerList.remove(pPlayer);
 
-	if (pLeavePlayer->bMonitoringLogin_ == true)
+	if (pLeavePlayer->bMonitoringLogin_)
 	{
-		pLeavePlayer->bMonitoringLogin_ = false;
 		EnterCriticalSection(&Player::MonitorSectorInfoCs);
 		if (Player::MonitoringClientSessionID == pLeavePlayer->sessionId_)
 			Player::MonitoringClientSessionID = MAXULONGLONG;
@@ -62,7 +59,7 @@ void ChatContents::OnLeave(void* pPlayer)
 	}
 
 	// 세션만 생성되고 로그인 안하다가 자의로 끊거나 타임아웃된경우
-	if (pLeavePlayer->bLogin_ == false)
+	if (!pLeavePlayer->bLogin_)
 		return;
 
 	// 이중 로그인 처리 -> 만약 같은 AccountNo의 다른 세션이 접속함에 따라 Disconnect 경우라면 bLogin이 true이고 loginPlayerMap에서 찾앗을때 없을것이다.
@@ -72,10 +69,8 @@ void ChatContents::OnLeave(void* pPlayer)
 		loginPlayerMap.erase(iter); // 이중로그인으로 인해서 끊긴 클라가 아닌 경우
 	}
 
-	pLeavePlayer->bLogin_ = false;
-
 	// 로그인햇다면 이미 이동 메시지를 보내고 등록된 좌표에 해당하는 섹터에 등록햇을것이므로 삭제한다.
-	if (pLeavePlayer->bRegisterAtSector_ == true)
+	if (pLeavePlayer->bRegisterAtSector_)
 		RemoveClientAtSector(pLeavePlayer->sectorX_, pLeavePlayer->sectorY_, pLeavePlayer);
 
 	InterlockedDecrement(&pGameServer_->lPlayerNum_);
@@ -97,7 +92,7 @@ void ChatContents::OnRecv(Packet* pPacket, void* pPlayer)
 			WORD sectorX;
 			WORD sectorY;
 			(*pPacket) >> accountNo >> sectorX >> sectorY;
-			if(pPacket->IsBufferEmpty() == false)
+			if(!pPacket->IsBufferEmpty())
 			{
 				pGameServer_->Disconnect(pRecvPlayer->sessionId_);
 				return;
@@ -111,7 +106,7 @@ void ChatContents::OnRecv(Packet* pPacket, void* pPlayer)
 			WORD messageLen;
 			(*pPacket) >> accountNo >> messageLen;
 			WCHAR* pMessage = (WCHAR*)pPacket->GetPointer(messageLen);
-			if (pMessage == nullptr || pPacket->IsBufferEmpty() == false)
+			if (!pMessage || !pPacket->IsBufferEmpty())
 			{
 				pGameServer_->Disconnect(pRecvPlayer->sessionId_);
 				return;
@@ -157,7 +152,7 @@ void ChatContents::ProcessEachPlayer()
 
 void ChatContents::CS_CHAT_REQ_SECTOR_MOVE(INT64 accountNo, WORD sectorX, WORD sectorY, Player* pPlayer)
 {
-	if (pPlayer->bLogin_ == false)
+	if (!pPlayer->bLogin_)
 	{
 		pGameServer_->Disconnect(pPlayer->sessionId_);
 		return;
@@ -177,7 +172,7 @@ void ChatContents::CS_CHAT_REQ_SECTOR_MOVE(INT64 accountNo, WORD sectorX, WORD s
 	}
 
 	// 최초등록이 아니라면 현재 섹터에서 제거
-	if (pPlayer->bRegisterAtSector_ == false)
+	if (!pPlayer->bRegisterAtSector_)
 		pPlayer->bRegisterAtSector_ = true;
 	else
 		RemoveClientAtSector(pPlayer->sectorX_, pPlayer->sectorY_, pPlayer);
@@ -190,12 +185,11 @@ void ChatContents::CS_CHAT_REQ_SECTOR_MOVE(INT64 accountNo, WORD sectorX, WORD s
 	SmartPacket sp = PACKET_ALLOC(Net);
 	MAKE_CS_CHAT_RES_SECTOR_MOVE(accountNo, sectorX, sectorY, sp);
 	pGameServer_->EnqPacket(pPlayer->sessionId_, sp.GetPacket());
-	//pGameServer_->SendPacket(pPlayer->sessionId_, sp);
 }
 
 void ChatContents::CS_CHAT_REQ_MESSAGE(INT64 accountNo, WORD messageLen, WCHAR* pMessage, Player* pPlayer)
 {
-	if (pPlayer->bLogin_ == false)
+	if (!pPlayer->bLogin_)
 	{
 		pGameServer_->Disconnect(pPlayer->sessionId_);
 		return;
