@@ -5,13 +5,6 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
-    <Filter Include="헤더 파일">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
-    </Filter>
-    <Filter Include="LoginThread">
-      <UniqueIdentifier>{bfc6993b-3a34-45a2-b24a-668a02977614}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Other">
       <UniqueIdentifier>{c7518efe-d350-4c96-af9b-e531bc72a323}</UniqueIdentifier>
     </Filter>
@@ -30,13 +23,16 @@
     <Filter Include="ChatContents">
       <UniqueIdentifier>{86229e6d-abfe-47ba-9676-091e085e6fbf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="LoginContents">
+      <UniqueIdentifier>{bfc6993b-3a34-45a2-b24a-668a02977614}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="LoginContents.cpp">
-      <Filter>LoginThread</Filter>
+      <Filter>LoginContents</Filter>
     </ClCompile>
     <ClCompile Include="ChatContents.cpp">
       <Filter>ChatContents</Filter>
@@ -95,7 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LoginContents.h">
-      <Filter>LoginThread</Filter>
+      <Filter>LoginContents</Filter>
     </ClInclude>
     <ClInclude Include="ChatContents.h">
       <Filter>ChatContents</Filter>
@@ -104,12 +100,6 @@
       <Filter>Other</Filter>
     </ClInclude>
     <ClInclude Include="Sector.h">
-      <Filter>Other</Filter>
-    </ClInclude>
-    <ClInclude Include="Player.h">
-      <Filter>Other</Filter>
-    </ClInclude>
-    <ClInclude Include="en_ChatContentsType.h">
       <Filter>Other</Filter>
     </ClInclude>
     <ClInclude Include="..\..\ServerCommon\ServerCommon\Assert.h">
@@ -181,12 +171,6 @@
     <ClInclude Include="..\..\GameServerLib\GameServerLib\GameSession.h">
       <Filter>GameServerLib</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\GameServerLib\GameServerLib\IContents.h">
-      <Filter>GameServerLib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\GameServerLib\GameServerLib\IHandler.h">
-      <Filter>GameServerLib</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\GameServerLib\GameServerLib\Logger.h">
       <Filter>GameServerLib</Filter>
     </ClInclude>
@@ -197,9 +181,6 @@
       <Filter>GameServerLib</Filter>
     </ClInclude>
     <ClInclude Include="..\..\GameServerLib\GameServerLib\ThreadMessage.h">
-      <Filter>GameServerLib</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\GameServerLib\GameServerLib\ThreadMsg.h">
       <Filter>GameServerLib</Filter>
     </ClInclude>
     <ClInclude Include="LoginChatServer.h">
@@ -216,6 +197,12 @@
     </ClInclude>
     <ClInclude Include="..\..\GameServerLib\GameServerLib\GameServerTimeOut.h">
       <Filter>GameServerLib</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>LoginContents</Filter>
+    </ClInclude>
+    <ClInclude Include="en_ChatContentsType.h">
+      <Filter>LoginContents</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

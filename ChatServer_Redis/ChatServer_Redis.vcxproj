@@ -161,13 +161,10 @@
     <ClInclude Include="..\..\GameServerLib\GameServerLib\GameServer.h" />
     <ClInclude Include="..\..\GameServerLib\GameServerLib\GameServerTimeOut.h" />
     <ClInclude Include="..\..\GameServerLib\GameServerLib\GameSession.h" />
-    <ClInclude Include="..\..\GameServerLib\GameServerLib\IContents.h" />
-    <ClInclude Include="..\..\GameServerLib\GameServerLib\IHandler.h" />
     <ClInclude Include="..\..\GameServerLib\GameServerLib\Logger.h" />
     <ClInclude Include="..\..\GameServerLib\GameServerLib\ParallelContent.h" />
     <ClInclude Include="..\..\GameServerLib\GameServerLib\SerialContent.h" />
     <ClInclude Include="..\..\GameServerLib\GameServerLib\ThreadMessage.h" />
-    <ClInclude Include="..\..\GameServerLib\GameServerLib\ThreadMsg.h" />
     <ClInclude Include="..\..\LanClient\LanClient\LanClient.h" />
     <ClInclude Include="..\..\LanClient\LanClient\LanClientSession.h" />
     <ClInclude Include="..\..\ServerCommon\ServerCommon\Assert.h" />
